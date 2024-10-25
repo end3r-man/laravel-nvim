@@ -1,4 +1,3 @@
--- Standalone plugins with less than 10 lines of config go here
 return {
   {
     -- Tmux & split window navigation
@@ -40,5 +39,18 @@ return {
     config = function()
       require('colorizer').setup()
     end,
+  },
+  {'akinsho/toggleterm.nvim',
+    config = function()
+      require("toggleterm").setup{
+        size = 10,
+        open_mapping = [[<c-t>]],
+        shade_filetypes = {},
+        shade_terminals = true,
+        start_in_insert = true,
+        persist_size = true,
+        direction = 'tab',
+      }
+    end
   },
 }

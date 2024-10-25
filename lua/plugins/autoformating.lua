@@ -15,6 +15,7 @@ return {
         'prettier', -- ts/js formatter
         'stylua', -- lua formatter
         'shfmt', -- Shell formatter
+        'blade-formatter'
       },
       automatic_installation = true,
     }
@@ -24,7 +25,6 @@ return {
       formatting.prettier.with { filetypes = { 'html', 'json', 'yaml', 'markdown' } },
       formatting.stylua,
       formatting.shfmt.with { args = { '-i', '4' } },
-      formatting.terraform_fmt,
     }
 
     local augroup = vim.api.nvim_create_augroup('LspFormatting', {})

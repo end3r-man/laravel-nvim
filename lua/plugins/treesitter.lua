@@ -17,8 +17,6 @@ return {
 			"python",
 			"query",
 			"regex",
-			"tsx",
-			"typescript",
 			"vim",
 			"yaml",
 			"php",
