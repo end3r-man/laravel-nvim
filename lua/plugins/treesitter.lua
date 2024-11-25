@@ -8,6 +8,7 @@ return {
 	opts = {
 		ensure_installed = {
 			"bash",
+			"blade",
 			"html",
 			"javascript",
 			"json",

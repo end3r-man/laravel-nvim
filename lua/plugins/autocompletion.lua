@@ -22,6 +22,7 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-buffer",
 		"hrsh7th/cmp-path",
+		"hrsh7th/cmp-cmdline",
 	},
 	config = function()
 		-- See `:help cmp`
@@ -35,7 +36,7 @@ return {
 
 		-- Extend filetypes for LuaSnip
 		luasnip.filetype_extend("php", { "phpdoc", "php" })
-		luasnip.filetype_extend("blade", { "blade" })
+		luasnip.filetype_extend("blade", { "blade", "javascript" })
 
 		local kind_icons = {
 			Text = "󰉿",
@@ -138,4 +139,3 @@ return {
 		})
 	end,
 }
-

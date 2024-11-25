@@ -26,11 +26,6 @@ return {
 			end,
 		},
 	},
-	opts = {
-		window = {
-			position = "right",
-		},
-	},
 	config = function()
 		-- If you want icons for diagnostic errors, you'll need to define them somewhere:
 		vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
@@ -72,9 +67,9 @@ return {
 					expander_highlight = "NeoTreeExpander",
 				},
 				icon = {
-					folder_closed = "",
-					folder_open = "",
-					folder_empty = "󰜌",
+					folder_closed = "",
+					folder_open = "",
+					folder_empty = "󱧸",
 					provider = function(icon, node, state) -- default icon provider utilizes nvim-web-devicons if available
 						if node.type == "file" or node.type == "terminal" then
 							local success, web_devicons = pcall(require, "nvim-web-devicons")
@@ -141,7 +136,7 @@ return {
 			-- see `:h neo-tree-custom-commands-global`
 			commands = {},
 			window = {
-				position = "left",
+				position = "right",
 				width = 40,
 				mapping_options = {
 					noremap = true,

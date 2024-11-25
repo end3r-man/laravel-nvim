@@ -45,7 +45,7 @@ return {
 					end
 				end
 
-				return { timeout_ms = 500, lsp_fallback = true }, on_format
+				return { timeout_ms = 5000, lsp_fallback = true }, on_format
 			end,
 			format_after_save = function(bufnr)
 				if slow_format_filetypes[vim.bo[bufnr].filetype] then
@@ -68,5 +68,5 @@ return {
 			"hrsh7th/nvim-cmp",
 		},
 		ft = { "blade", "php" }, -- optional, improves startup time
-	}
+	},
 }

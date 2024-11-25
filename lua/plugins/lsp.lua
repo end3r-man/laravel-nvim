@@ -10,12 +10,8 @@ return {
 		-- Useful status updates for LSP.
 		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
 		{ "j-hui/fidget.nvim", opts = {} },
-
-		-- Allows extra capabilities provided by nvim-cmp
-		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
-
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 			callback = function(event)
@@ -146,7 +142,7 @@ return {
 
 			html = { filetypes = { "html", "twig", "hbs", "blade" } },
 			cssls = {},
-			tailwindcss = {},
+			tailwindcss = { filetypes = { "blade" } },
 			jsonls = {},
 			yamlls = {},
 
@@ -199,21 +195,20 @@ return {
 			},
 		})
 
-		-- require('lspconfig').intelephense.setup{}
+		-- require("lspconfig").intelephense.setup({})
 
-		require('lspconfig').phpactor.setup{
+		require("lspconfig").phpactor.setup({
 			on_attach = function(client, bufnr)
-			  -- Your custom on_attach function for key mappings
-			  -- Example: vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', { noremap=true, silent=true }):
+				-- Your custom on_attach function for key mappings
+				-- Example: vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', { noremap=true, silent=true }):
 			end,
 			init_options = {
-			  ["language_server.diagnostics_on_update"] = false,
-			  ["language_server.diagnostics_on_open"] = false,
-			  ["language_server.diagnostics_on_save"] = false,
-			  ["language_server_phpstan.enabled"] = false,
-			  ["language_server_psalm.enabled"] = false,
+				["language_server.diagnostics_on_update"] = false,
+				["language_server.diagnostics_on_open"] = true,
+				["language_server.diagnostics_on_save"] = true,
+				["language_server_phpstan.enabled"] = true,
+				["language_server_psalm.enabled"] = true,
 			},
-		}
-		  
+		})
 	end,
 }
