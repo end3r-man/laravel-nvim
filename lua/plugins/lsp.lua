@@ -1,14 +1,9 @@
 return {
-	-- Main LSP Configuration
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		-- Automatically install LSPs and related tools to stdpath for Neovim
 		{ "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
 		"williamboman/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-
-		-- Useful status updates for LSP.
-		-- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
 		{ "j-hui/fidget.nvim", opts = {} },
 	},
 	config = function()
@@ -103,38 +98,6 @@ return {
 			end,
 		})
 
-		vim.api.nvim_create_autocmd({ "FileType" }, {
-			pattern = "css,eruby,html,htmldjango,javascriptreact,less,pug,sass,scss,typescriptreact,blade",
-			callback = function()
-				vim.lsp.start({
-					cmd = { "emmet-language-server", "--stdio" },
-					root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]),
-					-- Read more about this options in the [vscode docs](https://code.visualstudio.com/docs/editor/emmet#_emmet-configuration).
-					-- **Note:** only the options listed in the table are supported.
-					init_options = {
-						---@type table<string, string>
-						includeLanguages = {},
-						--- @type string[]
-						excludeLanguages = {},
-						--- @type string[]
-						extensionsPath = {},
-						--- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/preferences/)
-						preferences = {},
-						--- @type boolean Defaults to `true`
-						showAbbreviationSuggestions = true,
-						--- @type "always" | "never" Defaults to `"always"`
-						showExpandedAbbreviation = "always",
-						--- @type boolean Defaults to `false`
-						showSuggestionsAsSnippets = false,
-						--- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/syntax-profiles/)
-						syntaxProfiles = {},
-						--- @type table<string, string> [Emmet Docs](https://docs.emmet.io/customization/snippets/#variables)
-						variables = {},
-					},
-				})
-			end,
-		})
-
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
@@ -142,7 +105,7 @@ return {
 
 			html = { filetypes = { "html", "twig", "hbs", "blade" } },
 			cssls = {},
-			tailwindcss = { filetypes = { "blade" } },
+			tailwindcss = { filetypes = { "blade", "vue" } },
 			jsonls = {},
 			yamlls = {},
 
@@ -170,12 +133,6 @@ return {
 			},
 		}
 
-		require("mason").setup({
-			package_manager = "pnpm",
-		})
-
-		-- You can add other tools here that you want Mason to install
-		-- for you, so that they are available from within Neovim.
 		local ensure_installed = vim.tbl_keys(servers or {})
 		vim.list_extend(ensure_installed, {
 			"stylua", -- Used to format Lua code
@@ -186,9 +143,6 @@ return {
 			handlers = {
 				function(server_name)
 					local server = servers[server_name] or {}
-					-- This handles overriding only values explicitly passed
-					-- by the server configuration above. Useful when disabling
-					-- certain features of an LSP (for example, turning off formatting for tsserver)
 					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 					require("lspconfig")[server_name].setup(server)
 				end,
@@ -196,8 +150,10 @@ return {
 		})
 
 		-- require("lspconfig").intelephense.setup({})
+		--
+		local lspconfig = require("lspconfig")
 
-		require("lspconfig").phpactor.setup({
+		lspconfig.phpactor.setup({
 			on_attach = function(client, bufnr)
 				-- Your custom on_attach function for key mappings
 				-- Example: vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', { noremap=true, silent=true }):
@@ -208,6 +164,44 @@ return {
 				["language_server.diagnostics_on_save"] = true,
 				["language_server_phpstan.enabled"] = true,
 				["language_server_psalm.enabled"] = true,
+			},
+		})
+
+		lspconfig.emmet_language_server.setup({
+			filetypes = {
+				"css",
+				"eruby",
+				"html",
+				"javascript",
+				"javascriptreact",
+				"less",
+				"sass",
+				"scss",
+				"pug",
+				"typescriptreact",
+				"blade",
+			},
+			-- Read more about this options in the [vscode docs](https://code.visualstudio.com/docs/editor/emmet#_emmet-configuration).
+			-- **Note:** only the options listed in the table are supported.
+			init_options = {
+				---@type table<string, string>
+				includeLanguages = {},
+				--- @type string[]
+				excludeLanguages = {},
+				--- @type string[]
+				extensionsPath = {},
+				--- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/preferences/)
+				preferences = {},
+				--- @type boolean Defaults to `true`
+				showAbbreviationSuggestions = true,
+				--- @type "always" | "never" Defaults to `"always"`
+				showExpandedAbbreviation = "always",
+				--- @type boolean Defaults to `false`
+				showSuggestionsAsSnippets = false,
+				--- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/syntax-profiles/)
+				syntaxProfiles = {},
+				--- @type table<string, string> [Emmet Docs](https://docs.emmet.io/customization/snippets/#variables)
+				variables = {},
 			},
 		})
 	end,

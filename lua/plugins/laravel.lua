@@ -5,7 +5,7 @@ local slow_format_filetypes = {
 return {
 	{
 		"stevearc/conform.nvim",
-		event = { "BufWritePre" },
+		event = { "BufReadPre", "BufNewFile" },
 		cmd = { "ConformInfo" },
 		keys = {
 			{
@@ -25,15 +25,9 @@ return {
 				},
 			},
 			formatters_by_ft = {
-				blade = { "prettier", "blade-formatter", stop_after_first = true },
-				json = { "prettier", "jq", stop_after_first = true },
+				blade = { "blade-formatter", stop_after_first = true },
 				javascript = { "prettierd", "prettier", stop_after_first = true },
-				lua = { "stylua" },
-				markdown = { "prettier", "markdownlint", stop_after_first = true },
 				php = { "pint", "phpcbf", "php_cs_fixer", stop_after_first = true },
-				sql = { "pg_format", "sqlfmt", stop_after_first = true },
-				yaml = { "yamlfmt" },
-				["*"] = { "injected" },
 			},
 			format_on_save = function(bufnr)
 				if slow_format_filetypes[vim.bo[bufnr].filetype] then
