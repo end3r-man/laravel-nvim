@@ -13,7 +13,6 @@ return {
 				function()
 					require("conform").format({ async = true, lsp_fallback = true, timeout_ms = 5000 })
 				end,
-				mode = "",
 				desc = "Format buffer",
 			},
 		},
@@ -23,16 +22,31 @@ return {
 				prettier = {
 					prepend_args = { "--ignore-unknown" },
 				},
+				["php-cs-fixer"] = {
+					command = "php-cs-fixer",
+					args = {
+						"fix",
+						"--rules=@PSR12", -- Formatting preset. Other presets are available, see the php-cs-fixer docs.
+						"$FILENAME",
+					},
+					stdin = false,
+				},
 			},
 			formatters_by_ft = {
-				blade = { "blade-formatter", stop_after_first = true },
-				javascript = { "prettierd", "prettier", stop_after_first = true },
-				php = { "pint", "phpcbf", "php_cs_fixer", stop_after_first = true },
+				blade = { "blade-formatter" },
+				lua = { "stylua" },
+				javascript = { "prettierd", "prettier" },
+				json = { "prettierd", "prettier" },
+				fish = { "fish_indent" },
+				sh = { "shfmt" },
+				php = { "pint", "phpcbf", "php_cs_fixer" },
+				vue = { "prettierd", "prettier" },
 			},
 			format_on_save = function(bufnr)
 				if slow_format_filetypes[vim.bo[bufnr].filetype] then
 					return
 				end
+
 				local function on_format(err)
 					if err and err:match("timeout$") then
 						slow_format_filetypes[vim.bo[bufnr].filetype] = true
@@ -52,15 +66,14 @@ return {
 			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 		end,
 	},
+
 	-- Blade syntax highlighting
 	{ "jwalton512/vim-blade" },
+
+	-- Blade navigation plugin
 	{
-		-- Add the blade-nav.nvim plugin which provides Goto File capabilities
-		-- for Blade files.
 		"ricardoramirezr/blade-nav.nvim",
-		dependencies = {
-			"hrsh7th/nvim-cmp",
-		},
-		ft = { "blade", "php" }, -- optional, improves startup time
+		dependencies = { "hrsh7th/nvim-cmp" },
+		ft = { "blade", "php" }, -- Optional, improves startup time
 	},
 }
