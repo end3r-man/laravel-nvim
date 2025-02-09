@@ -8,7 +8,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+      { out,                            "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -18,18 +18,26 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
-    require 'plugins.neotree',
-    require 'plugins.theme',
-    require 'plugins.bufferline',
-    require 'plugins.lualine',
-    require 'plugins.treesitter',
-    require 'plugins.telescope',
-    require 'plugins.lsp',
-    require 'plugins.autocompletion',
-    require 'plugins.autocompletion',
-    require 'plugins.gitsigns',
-    require 'plugins.alpha',
-    require 'plugins.indent-blankline',
-    require 'plugins.misc',
-    require 'plugins.laravel'
+
+  --LSP Config
+  require('plugins.lsp.config'),
+
+  -- Language Config
+  require('plugins.lang.laravel'),
+  require('plugins.lang.treesitter'),
+
+  -- Auto Config
+  require('plugins.auto.autocompletion'),
+  require('plugins.auto.autoformating'),
+  require('plugins.auto.autoinstall'),
+
+  -- UI Config
+  require('plugins.ui.alpha'),
+  require('plugins.ui.bufferline'),
+  require('plugins.ui.gitsigns'),
+  require('plugins.ui.indent-blankline'),
+  require('plugins.ui.lualine'),
+  require('plugins.ui.neotree'),
+  require('plugins.ui.telescope'),
+  require('plugins.ui.theme'),
 })
