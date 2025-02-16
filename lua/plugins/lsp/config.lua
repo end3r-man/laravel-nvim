@@ -37,7 +37,7 @@ return {
 		local servers = {
 			html = { filetypes = { "html", "twig", "hbs", "blade" } },
 			cssls = {},
-			tailwindcss = { filetypes = { "blade", "vue" } },
+			tailwindcss = {},
 			jsonls = {},
 			yamlls = {},
 			lua_ls = {
@@ -93,10 +93,9 @@ return {
 				init_options = {
 					plugins = {
 						{
-							name = '@vue/typescript-plugin',
-							location = vim.fn.stdpath 'data' ..
-							'/mason/packages/vue-language-server/node_modules/@vue/language-server',
-							languages = { 'vue' },
+							name = "@vue/typescript-plugin",
+							location = vue_language_server_path,
+							languages = { "vue" },
 						},
 					},
 				},
@@ -106,7 +105,7 @@ return {
 							useSyntaxServer = false,
 						},
 						inlayHints = {
-							includeInlayParameterNameHints = 'all',
+							includeInlayParameterNameHints = "all",
 							includeInlayParameterNameHintsWhenArgumentMatchesName = true,
 							includeInlayFunctionParameterTypeHints = true,
 							includeInlayVariableTypeHints = true,
@@ -117,9 +116,8 @@ return {
 						},
 					},
 				},
+				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 			},
-
-
 		}
 
 		-- Ensure all servers are installed
@@ -155,11 +153,21 @@ return {
 		-- Emmet Language Server Configuration
 		require("lspconfig").emmet_language_server.setup({
 			filetypes = {
-				"css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss",
-				"pug", "typescriptreact", "blade", "vue",
+				"css",
+				"eruby",
+				"html",
+				"javascript",
+				"javascriptreact",
+				"less",
+				"sass",
+				"scss",
+				"pug",
+				"typescriptreact",
+				"blade",
+				"vue",
 			},
 			init_options = {
-				includeLanguages = {},
+				includeLanguages = { "javascript", "typescript", "vue" },
 				excludeLanguages = {},
 				extensionsPath = {},
 				preferences = {},
@@ -169,42 +177,21 @@ return {
 				syntaxProfiles = {},
 				variables = {},
 			},
-			capabilities = capabilities
+			capabilities = capabilities,
 		})
 
 		-- TypeScript Language Server Configuration (Vue integration)
-		-- require("lspconfig").ts_ls.setup({
-		-- 	init_options = {
-		-- 		plugins = {
-		-- 			{
-		-- 				name = "@vue/typescript-plugin",
-		-- 				location = vue_language_server_path,
-		-- 				languages = { "vue" },
-		-- 			},
-		-- 		},
-		-- 	},
-		-- 	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-		-- })
-
-		-- -- Volar Language Server for Vue
-		-- require("lspconfig").volar.setup({
-		-- 	filetypes = { "vue" },
-		-- 	on_attach = function(client, bufnr)
-		-- 		local function map(keys, func, desc)
-		-- 			vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-		-- 		end
-
-		-- 		map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-		-- 		map("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
-		-- 		map("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
-		-- 		map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-		-- 		map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-		-- 	end,
-		-- })
-
-		-- TailwindCSS Language Server
-		require("lspconfig").tailwindcss.setup({
-			capabilities = capabilities,
-		})
+		--	require("lspconfig").ts_ls.setup({
+		--		init_options = {
+		--			plugins = {
+		--				{
+		--					name = "@vue/typescript-plugin",
+		--					location = vue_language_server_path,
+		--					languages = { "vue" },
+		--				},
+		--			},
+		--		},
+		--		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+		--	})
 	end,
 }

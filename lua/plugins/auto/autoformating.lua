@@ -17,7 +17,7 @@ return {
 					"blade-formatter", -- Blade template formatter
 					"eslint_d", -- JavaScript linter
 					"markdownlint", -- Markdown linter
-					"php-cs-fixer"
+					"php-cs-fixer",
 				},
 				automatic_installation = true,
 			})
