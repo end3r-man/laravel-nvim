@@ -37,7 +37,9 @@ return {
 		local servers = {
 			html = { filetypes = { "html", "blade" } },
 			cssls = {},
-			--tailwindcss = { filetypes = { "blade" } },
+			tailwindcss = {
+				filetypes = { "blade", "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+			},
 			jsonls = {},
 			yamlls = {},
 			lua_ls = {
@@ -136,8 +138,18 @@ return {
 			},
 		})
 
+		require("cmp").setup({
+			formatting = {
+				format = require("tailwindcss-colorizer-cmp").formatter,
+			},
+		})
+
 		require("tailwind-tools").setup({
 			filetypes = { "blade", "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+			document_color = {
+				enabled = true,
+				kind = "inline",
+			},
 		})
 
 		require("lspconfig").emmet_language_server.setup({
