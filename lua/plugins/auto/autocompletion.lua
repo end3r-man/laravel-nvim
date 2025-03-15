@@ -28,7 +28,7 @@ return {
 		local luasnip = require("luasnip")
 
 		luasnip.config.setup({
-			history = true,                   -- Keep track of previously used snippets
+			history = true, -- Keep track of previously used snippets
 			updateevents = "TextChanged,TextChangedI", -- Update snippets on text change
 		})
 

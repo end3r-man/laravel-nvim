@@ -73,3 +73,12 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- ToggleTerms
 vim.keymap.set("n", "<C-n>", '<Cmd>exe v:count1 . "ToggleTerm"<CR>', opts)
+
+-- Neotree
+vim.keymap.set("n", "<leader>e", ":Neotree toggle position=right<CR>", opts)
+vim.keymap.set("n", "<leader>ngs", ":Neotree float git_status<CR>", opts)
+
+--GitDiffer
+vim.keymap.set("n", "<leader>gdh", ":DiffviewFileHistory<CR>", opts)
+vim.keymap.set("n", "<leader>gdc", ":DiffviewFileHistory %<CR>", opts)
+vim.keymap.set("n", "<leader>gdx", ":DiffviewClose<CR>", opts)

@@ -35,9 +35,9 @@ return {
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 		local servers = {
-			html = { filetypes = { "html", "twig", "hbs", "blade" } },
+			html = { filetypes = { "html", "blade" } },
 			cssls = {},
-			tailwindcss = {},
+			--tailwindcss = { filetypes = { "blade" } },
 			jsonls = {},
 			yamlls = {},
 			lua_ls = {
@@ -136,39 +136,24 @@ return {
 			},
 		})
 
-		-- PHP Actor Configuration
-		require("lspconfig").phpactor.setup({
-			on_attach = function(client, bufnr)
-				-- Additional PHP Actor-specific configurations can be added here
-			end,
-			init_options = {
-				["language_server.diagnostics_on_update"] = false,
-				["language_server.diagnostics_on_open"] = true,
-				["language_server.diagnostics_on_save"] = true,
-				["language_server_phpstan.enabled"] = true,
-				["language_server_psalm.enabled"] = true,
-			},
+		require("tailwind-tools").setup({
+			filetypes = { "blade", "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 		})
 
-		-- Emmet Language Server Configuration
 		require("lspconfig").emmet_language_server.setup({
 			filetypes = {
 				"css",
 				"eruby",
 				"html",
-				"javascript",
-				"javascriptreact",
 				"less",
 				"sass",
 				"scss",
 				"pug",
-				"typescriptreact",
 				"blade",
-				"vue",
 			},
 			init_options = {
-				includeLanguages = { "javascript", "typescript", "vue" },
-				excludeLanguages = {},
+				includeLanguages = { "javascript", "typescript" },
+				excludeLanguages = { "vue" },
 				extensionsPath = {},
 				preferences = {},
 				showAbbreviationSuggestions = true,
@@ -180,18 +165,29 @@ return {
 			capabilities = capabilities,
 		})
 
-		-- TypeScript Language Server Configuration (Vue integration)
-		--	require("lspconfig").ts_ls.setup({
-		--		init_options = {
-		--			plugins = {
-		--				{
-		--					name = "@vue/typescript-plugin",
-		--					location = vue_language_server_path,
-		--					languages = { "vue" },
-		--				},
-		--			},
-		--		},
-		--		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-		--	})
+		require("lspconfig").phpactor.setup({
+			on_attach = function(client, bufnr)
+				-- Additional PHP Actor-specific configurations can be added here
+			end,
+			init_options = {
+				["language_server.diagnostics_on_update"] = false,
+				["language_server.diagnostics_on_open"] = true,
+				["language_server.diagnostics_on_save"] = true,
+				["language_server_phpstan.enabled"] = false,
+				["language_server_psalm.enabled"] = false,
+			},
+		})
+
+		require("lspconfig").gopls.setup({
+			settings = {
+				gopls = {
+					analyses = {
+						unusedparams = true,
+					},
+					staticcheck = true,
+					gofumpt = true,
+				},
+			},
+		})
 	end,
 }
