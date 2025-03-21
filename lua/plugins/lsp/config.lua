@@ -10,6 +10,7 @@ return {
 		local mason_registry = require("mason-registry")
 		local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
 			.. "/node_modules/@vue/language-server"
+		local util = require("lspconfig.util")
 
 		-- LSP Attach autocmd to map keys
 		vim.api.nvim_create_autocmd("LspAttach", {
@@ -38,7 +39,15 @@ return {
 			html = { filetypes = { "html", "blade" } },
 			cssls = {},
 			tailwindcss = {
-				filetypes = { "blade", "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+				filetypes = {
+					"html",
+					"blade",
+					"javascript",
+					"typescript",
+					"vue",
+					"javascriptreact",
+					"typescriptreact",
+				},
 			},
 			jsonls = {},
 			yamlls = {},
@@ -138,14 +147,7 @@ return {
 			},
 		})
 
-		require("cmp").setup({
-			formatting = {
-				format = require("tailwindcss-colorizer-cmp").formatter,
-			},
-		})
-
 		require("tailwind-tools").setup({
-			filetypes = { "blade", "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 			document_color = {
 				enabled = true,
 				kind = "inline",
