@@ -79,6 +79,6 @@ vim.keymap.set("n", "<leader>e", ":Neotree toggle position=right<CR>", opts)
 vim.keymap.set("n", "<leader>ngs", ":Neotree float git_status<CR>", opts)
 
 --GitDiffer
-vim.keymap.set("n", "<leader>gdh", ":DiffviewFileHistory<CR>", opts)
-vim.keymap.set("n", "<leader>gdc", ":DiffviewFileHistory %<CR>", opts)
-vim.keymap.set("n", "<leader>gdx", ":DiffviewClose<CR>", opts)
+vim.keymap.set("n", "<leader>ghh", ":DiffviewFileHistory<CR>", opts)
+vim.keymap.set("n", "<leader>ghc", ":DiffviewFileHistory %<CR>", opts)
+vim.keymap.set("n", "<leader>ghx", ":DiffviewClose<CR>", opts)
