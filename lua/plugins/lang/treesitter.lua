@@ -31,6 +31,9 @@ return {
 			"blade",
 		})
 
+		-- Setup nvim-treesitter with the options
+		require("nvim-treesitter.configs").setup(opts)
+
 		-- Add filetype patterns
 		vim.filetype.add({
 			pattern = {
@@ -38,18 +41,15 @@ return {
 			},
 		})
 
-		-- Setup nvim-treesitter with the options
-		require("nvim-treesitter.configs").setup(opts)
-
-		-- Configure the parser for blade
-		local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-		parser_config.blade = {
-			install_info = {
-				url = "https://github.com/EmranMR/tree-sitter-blade",
-				files = { "src/parser.c" },
-				branch = "main",
-			},
-			filetype = "blade",
-		}
+		--	Configure the parser for blade
+		--	local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+		--	parser_config.blade = {
+		--		install_info = {
+		--			url = "https://github.com/EmranMR/tree-sitter-blade",
+		--			files = { "src/parser.c" },
+		--			branch = "main",
+		--		},
+		--		filetype = "blade",
+		--	}
 	end,
 }

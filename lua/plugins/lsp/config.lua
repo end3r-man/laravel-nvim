@@ -4,26 +4,83 @@ return {
 		{ "williamboman/mason.nvim", config = true },
 		"williamboman/mason-lspconfig.nvim",
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		{ "luckasRanarison/tailwind-tools.nvim", name = "tailwind-tools", build = ":UpdateRemotePlugins" },
-		"roobert/tailwindcss-colorizer-cmp.nvim",
 	},
 	config = function()
-		local lspconfig = require("lspconfig")
+		local lsp_attach_group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true })
 		local mason_registry = require("mason-registry")
-		local capabilities = require("cmp_nvim_lsp").default_capabilities()
+		local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
+			.. "/node_modules/@vue/language-server"
+		local util = require("lspconfig.util")
+
+		-- Keymaps on LSP attach
+		vim.api.nvim_create_autocmd("LspAttach", {
+			group = lsp_attach_group,
+			callback = function(event)
+				local client = vim.lsp.get_client_by_id(event.data.client_id)
+				local bufnr = event.buf
+
+				local function map(keys, func, desc)
+					vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+				end
+
+				map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+				map("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
+				map("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+				map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+				map("K", vim.lsp.buf.hover, "Show hover documentation")
+			end,
+		})
+
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 		local servers = {
 			html = { filetypes = { "html", "blade" } },
 			cssls = {},
 			tailwindcss = {
-				filetypes = { "html", "blade", "javascript", "typescript", "vue", "javascriptreact", "typescriptreact" },
+				root_dir = util.root_pattern("artisan", "package.json", "postcss.config.js", ".git"),
+				filetypes = {
+					"html",
+					"blade",
+					"javascript",
+					"typescript",
+					"vue",
+					"javascriptreact",
+					"typescriptreact",
+				},
+				settings = {
+					tailwindCSS = {
+						validate = true,
+						includeLanguages = {
+							blade = "html",
+						},
+						lint = {
+							cssConflict = "warning",
+							invalidApply = "error",
+							invalidConfigPath = "error",
+							invalidScreen = "error",
+							invalidTailwindDirective = "error",
+							invalidVariant = "error",
+							recommendedVariantOrder = "warning",
+						},
+					},
+				},
 			},
 			jsonls = {},
 			yamlls = {},
 			lua_ls = {
 				settings = {
 					Lua = {
+						completion = { callSnippet = "Replace" },
 						runtime = { version = "LuaJIT" },
+						workspace = {
+							checkThirdParty = false,
+							library = {
+								"${3rd}/luv/library",
+								unpack(vim.api.nvim_get_runtime_file("", true)),
+							},
+						},
 						diagnostics = { disable = { "missing-fields" } },
 						format = { enable = false },
 					},
@@ -39,7 +96,10 @@ return {
 							enumMemberValues = { enabled = true },
 							functionLikeReturnTypes = { enabled = true },
 							propertyDeclarationTypes = { enabled = true },
-							parameterTypes = { enabled = true, suppressWhenArgumentMatchesName = true },
+							parameterTypes = {
+								enabled = true,
+								suppressWhenArgumentMatchesName = true,
+							},
 							variableTypes = { enabled = true },
 						},
 					},
@@ -50,15 +110,16 @@ return {
 					plugins = {
 						{
 							name = "@vue/typescript-plugin",
-							location = mason_registry.get_package("vue-language-server"):get_install_path()
-								.. "/node_modules/@vue/language-server",
+							location = vue_language_server_path,
 							languages = { "vue" },
 						},
 					},
 				},
 				settings = {
 					typescript = {
-						tsserver = { useSyntaxServer = false },
+						tsserver = {
+							useSyntaxServer = false,
+						},
 						inlayHints = {
 							includeInlayParameterNameHints = "all",
 							includeInlayParameterNameHintsWhenArgumentMatchesName = true,
@@ -74,80 +135,61 @@ return {
 				filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 			},
 			emmet_language_server = {
-				filetypes = { "css", "eruby", "html", "less", "sass", "scss", "pug", "blade" },
+				filetypes = {
+					"css",
+					"eruby",
+					"html",
+					"less",
+					"sass",
+					"scss",
+					"pug",
+					"blade",
+				},
 				init_options = {
 					includeLanguages = { "javascript", "typescript" },
 					excludeLanguages = { "vue" },
+					extensionsPath = {},
+					preferences = {},
 					showAbbreviationSuggestions = true,
 					showExpandedAbbreviation = "always",
 					showSuggestionsAsSnippets = false,
+					syntaxProfiles = {},
+					variables = {},
 				},
 			},
 			phpactor = {
-				cmd = { "phpactor", "language-server" },
 				init_options = {
 					["language_server.diagnostics_on_update"] = false,
 					["language_server.diagnostics_on_open"] = true,
 					["language_server.diagnostics_on_save"] = true,
-					["language_server_phpstan.enabled"] = false,
-					["language_server_psalm.enabled"] = false,
-				},
-				settings = {
-					phpactor = {
-						completion = { enabled = true },
-						indexing = { enabled = true },
-						diagnostics = { enabled = true },
-					},
+					["language_server_phpstan.enabled"] = true,
+					["language_server_psalm.enabled"] = true,
 				},
 			},
-
-			gopls = {
-				settings = {
-					gopls = {
-						analyses = { unusedparams = true },
-						staticcheck = true,
-						gofumpt = true,
-					},
-				},
-			},
+			--	gopls = {
+			--		settings = {
+			--			gopls = {
+			--				analyses = { unusedparams = true },
+			--				staticcheck = true,
+			--				gofumpt = true,
+			--			},
+			--		},
+			--	},
 		}
 
-		-- Global function to set up LSP
-		local function setup_lsp()
-			require("mason-tool-installer").setup({ ensure_installed = vim.tbl_keys(servers) })
+		local ensure_installed = vim.tbl_keys(servers)
+		vim.list_extend(ensure_installed, { "stylua" })
 
-			require("mason-lspconfig").setup({
-				handlers = {
-					function(server_name)
-						local server = servers[server_name] or {}
-						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-						vim.api.nvim_set_keymap(
-							"n",
-							"gd",
-							"<cmd>lua vim.lsp.buf.definition()<CR>",
-							{ noremap = true, silent = true }
-						)
-						vim.api.nvim_set_keymap(
-							"n",
-							"gr",
-							"<cmd>lua vim.lsp.buf.references()<CR>",
-							{ noremap = true, silent = true }
-						)
-						vim.api.nvim_set_keymap(
-							"n",
-							"K",
-							"<cmd>lua vim.lsp.buf.hover()<CR>",
-							{ noremap = true, silent = true }
-						)
-
-						lspconfig[server_name].setup(server)
-					end,
-				},
-			})
-		end
-
-		-- Call the setup function to initialize LSP
-		setup_lsp()
+		require("mason-lspconfig").setup({
+			handlers = {
+				function(server_name)
+					local server = servers[server_name] or {}
+					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+					require("lspconfig")[server_name].setup(server)
+				end,
+			},
+		})
 	end,
 }
