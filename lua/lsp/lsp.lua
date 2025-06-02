@@ -7,10 +7,8 @@ return {
 	},
 	config = function()
 		local lsp_attach_group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true })
-		local mason_registry = require("mason-registry")
-		local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
-			.. "/node_modules/@vue/language-server"
-		local util = require("lspconfig.util")
+		local volar_install_path =
+			vim.fn.expand("$MASON/packages/vue-language-server/node_modules/@vue/language-server")
 
 		-- Keymaps on LSP attach
 		vim.api.nvim_create_autocmd("LspAttach", {
@@ -39,22 +37,27 @@ return {
 			html = { filetypes = { "html", "blade" } },
 			cssls = {},
 			tailwindcss = {
-				root_dir = util.root_pattern("artisan", "package.json", "postcss.config.js", ".git"),
+				cmd = { "tailwindcss-language-server", "--stdio" },
+				root_dir = require("lspconfig").util.root_pattern(
+					"tailwind.config.js",
+					"tailwind.config.ts",
+					"postcss.config.js",
+					"postcss.config.ts",
+					"package.json",
+					"node_modules"
+				),
 				filetypes = {
 					"html",
 					"blade",
+					"css",
 					"javascript",
 					"typescript",
-					"vue",
 					"javascriptreact",
 					"typescriptreact",
+					"vue",
 				},
 				settings = {
 					tailwindCSS = {
-						validate = true,
-						includeLanguages = {
-							blade = "html",
-						},
 						lint = {
 							cssConflict = "warning",
 							invalidApply = "error",
@@ -64,8 +67,10 @@ return {
 							invalidVariant = "error",
 							recommendedVariantOrder = "warning",
 						},
+						validate = true,
 					},
 				},
+				flags = { debounce_text_changes = 150 },
 			},
 			jsonls = {},
 			yamlls = {},
@@ -110,7 +115,7 @@ return {
 					plugins = {
 						{
 							name = "@vue/typescript-plugin",
-							location = vue_language_server_path,
+							location = volar_install_path,
 							languages = { "vue" },
 						},
 					},
@@ -163,7 +168,7 @@ return {
 					["language_server.diagnostics_on_open"] = true,
 					["language_server.diagnostics_on_save"] = true,
 					["language_server_phpstan.enabled"] = true,
-					["language_server_psalm.enabled"] = true,
+					["language_server_psalm.enabled"] = false,
 				},
 			},
 			--	gopls = {
@@ -180,7 +185,7 @@ return {
 		local ensure_installed = vim.tbl_keys(servers)
 		vim.list_extend(ensure_installed, { "stylua" })
 
-		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+		--require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 		require("mason-lspconfig").setup({
 			handlers = {

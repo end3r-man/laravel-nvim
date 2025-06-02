@@ -21,49 +21,28 @@ return {
 		},
 		opts = {
 			log_level = vim.log.levels.WARN,
-			formatters = {
-				prettier = {
-					prepend_args = { "--ignore-unknown" },
-				},
-			},
 			formatters_by_ft = {
 				blade = { "blade-formatter", stop_after_first = true },
-				json = { "prettier", "jq", stop_after_first = true },
-				javascript = { "prettier", stop_after_first = true },
+				vue = { "prettierd", stop_after_first = true },
+				javascript = { "prettierd", stop_after_first = true },
+				typescript = { "prettierd", stop_after_first = true },
+				json = { "prettierd", "jq", stop_after_first = true },
+				markdown = { "prettierd", "markdownlint", stop_after_first = true },
 				lua = { "stylua" },
-				markdown = { "prettier", "markdownlint", stop_after_first = true },
-				php = { "pint", "phpcbf", "php_cs_fixer", stop_after_first = true },
+				php = { "pretty-php", "phpcbf", "php-cs-fixer", stop_after_first = true },
 				sql = { "pg_format", "sqlfmt", stop_after_first = true },
 				yaml = { "yamlfmt" },
 				["*"] = { "injected" },
 			},
-			format_on_save = function(bufnr)
-				if slow_format_filetypes[vim.bo[bufnr].filetype] then
-					return
-				end
-
-				local function on_format(err)
-					if err and err:match("timeout$") then
-						slow_format_filetypes[vim.bo[bufnr].filetype] = true
-					end
-				end
-
-				return {
-					timeout_ms = 5000,
-					lsp_fallback = true,
-					quiet = false,
-				}, on_format
-			end,
-			format_after_save = function(bufnr)
-				if slow_format_filetypes[vim.bo[bufnr].filetype] then
-					return
-				end
-				return {
-					timeout_ms = 5000,
-					lsp_fallback = true,
-					async = true,
-				}
-			end,
+			format_on_save = {
+				timeout_ms = 5000,
+				lsp_fallback = true,
+				quiet = false,
+			},
+			format_after_save = {
+				lsp_fallback = true,
+				async = true,
+			},
 		},
 		init = function()
 			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"

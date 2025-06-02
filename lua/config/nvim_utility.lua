@@ -54,4 +54,7 @@ return {
 			})
 		end,
 	},
+	{
+		"andweeb/presence.nvim",
+	},
 }

@@ -10,17 +10,12 @@ return {
 					kind = "inline",
 					inline_symbol = "󰝤 ",
 				},
-				server = {
-					override = true,
-					settings = {
-						tailwindCSS = {
-							experimental = {
-								classRegex = {
-									{ 'class[:]\\s*"([^"]*)"', 1 },
-									{ '~H"([^"]*)"', 1 },
-								},
-							},
-						},
+				conceal = {
+					enabled = false,
+					min_length = nil,
+					symbol = "",
+					highlight = {
+						fg = "#38BDF8",
 					},
 				},
 			})
@@ -36,6 +31,10 @@ return {
 			require("tailwindcss-colorizer-cmp").setup({
 				color_square_width = 2,
 			})
+
+			require("cmp").config.formatting = {
+				format = require("tailwindcss-colorizer-cmp").formatter,
+			}
 		end,
 	},
 }

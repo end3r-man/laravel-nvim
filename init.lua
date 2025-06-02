@@ -19,28 +19,26 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 
+	-- Lazy Config
+	require("config.nvim_cmp"),
+	require("config.nvim_conform"),
+	require("config.nvim_laravel"),
+	require("config.nvim_tailwind"),
+	require("config.nvim_treesitter"),
+	require("config.nvim_utility"),
+
 	--LSP Config
-	require("plugins.lsp.config"),
-
-	-- Language Config
-	require("plugins.lang.tailwind"),
-	require("plugins.lang.laravel"),
-	require("plugins.lang.treesitter"),
-
-	-- Auto Config
-	--require("plugins.auto.autoformating"),
-	require("plugins.auto.autocompletion"),
-	require("plugins.auto.autoformatinconform"),
-	require("plugins.auto.autoinstall"),
+	require("lsp"),
+	--require("lsp.vue"),
 
 	-- UI Config
-	require("plugins.ui.alpha"),
-	require("plugins.ui.bufferline"),
-	require("plugins.ui.gitsigns"),
-	require("plugins.ui.indent-blankline"),
-	require("plugins.ui.differ"),
-	require("plugins.ui.lualine"),
-	require("plugins.ui.neotree"),
-	require("plugins.ui.telescope"),
-	require("plugins.ui.theme"),
+	require("ui.alpha"),
+	require("ui.bufferline"),
+	require("ui.differ"),
+	require("ui.gitsigns"),
+	require("ui.indent-blankline"),
+	require("ui.lualine"),
+	require("ui.neotree"),
+	require("ui.telescope"),
+	require("ui.theme"),
 })
