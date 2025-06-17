@@ -24,8 +24,11 @@ require("lazy").setup({
 	require("config.nvim_conform"),
 	require("config.nvim_laravel"),
 	require("config.nvim_tailwind"),
-	require("config.nvim_treesitter"),
 	require("config.nvim_utility"),
+	require("config.nvim_treesitter"),
+	require("config.nvim_laravel"),
+	require("config.nvim_precognition"),
+	require("config.nvim_neoscroll"),
 
 	--LSP Config
 	require("lsp"),

@@ -5,5 +5,6 @@ return {
 	tailwindcss = require("lsp.servers.tailwind"),
 	emmet_language_server = require("lsp.servers.emmet"),
 	html = require("lsp.servers.html"),
+	--vue_ls = require("lsp.servers.vue_ls"),
 	--volar = require("lsp.servers.volar"),
 }

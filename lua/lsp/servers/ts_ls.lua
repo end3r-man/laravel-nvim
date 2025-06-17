@@ -6,7 +6,11 @@ return {
 			{
 				name = "@vue/typescript-plugin",
 				location = volar_path,
-				languages = { "vue" },
+				languages = {
+					"javascript",
+					"typescript",
+					"vue",
+				},
 			},
 		},
 	},
@@ -23,5 +27,9 @@ return {
 			},
 		},
 	},
-	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+	filetypes = {
+		"typescript",
+		"javascript",
+		"vue",
+	},
 }
