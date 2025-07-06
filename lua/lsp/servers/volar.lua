@@ -1,24 +1,29 @@
 return {
-	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-	-- If you want to use Take Over Mode, include the above filetypes
+	filetypes = { "vue" },
 	init_options = {
-		languageFeatures = {
-			implementation = true,
-			documentHighlight = true,
-			documentLink = true,
-			codeLens = { showReferencesNotification = true },
-			semanticTokens = false,
-			diagnostics = true,
-			schemaRequestService = true,
+		vue = {
+			hybridMode = true,
 		},
-		documentFeatures = {
-			selectionRange = true,
-			foldingRange = true,
-			linkedEditingRange = true,
-			documentSymbol = true,
-			documentColor = true,
-			documentFormatting = {
-				defaultPrintWidth = 100,
+	},
+	settings = {
+		typescript = {
+			inlayHints = {
+				enumMemberValues = {
+					enabled = true,
+				},
+				functionLikeReturnTypes = {
+					enabled = true,
+				},
+				propertyDeclarationTypes = {
+					enabled = true,
+				},
+				parameterTypes = {
+					enabled = true,
+					suppressWhenArgumentMatchesName = true,
+				},
+				variableTypes = {
+					enabled = true,
+				},
 			},
 		},
 	},

@@ -31,7 +31,7 @@ require("lazy").setup({
 	require("config.nvim_neoscroll"),
 
 	--LSP Config
-	require("lsp"),
+	require("lsp.lsp"),
 	--require("lsp.vue"),
 
 	-- UI Config
@@ -44,4 +44,8 @@ require("lazy").setup({
 	require("ui.neotree"),
 	require("ui.telescope"),
 	require("ui.theme"),
+}, {
+	performance = {
+		rtp = { reset = false }, -- important, so nvim-treesitter works
+	},
 })

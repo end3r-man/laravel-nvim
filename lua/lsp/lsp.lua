@@ -92,20 +92,36 @@ return {
 				},
 			},
 			volar = {
+				filetypes = { "vue" },
 				init_options = {
-					vue = { hybridMode = false },
+					vue = {
+						hybridMode = true,
+					},
+					typescript = {
+						tsdk = vim.fn.expand(
+							"~/.local/share/nvim/mason/packages/vue-language-server/node_modules/typescript/lib"
+						),
+					},
 				},
 				settings = {
 					typescript = {
 						inlayHints = {
-							enumMemberValues = { enabled = true },
-							functionLikeReturnTypes = { enabled = true },
-							propertyDeclarationTypes = { enabled = true },
+							enumMemberValues = {
+								enabled = true,
+							},
+							functionLikeReturnTypes = {
+								enabled = true,
+							},
+							propertyDeclarationTypes = {
+								enabled = true,
+							},
 							parameterTypes = {
 								enabled = true,
 								suppressWhenArgumentMatchesName = true,
 							},
-							variableTypes = { enabled = true },
+							variableTypes = {
+								enabled = true,
+							},
 						},
 					},
 				},

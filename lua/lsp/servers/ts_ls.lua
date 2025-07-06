@@ -6,30 +6,25 @@ return {
 			{
 				name = "@vue/typescript-plugin",
 				location = volar_path,
-				languages = {
-					"javascript",
-					"typescript",
-					"vue",
-				},
+				languages = { "vue" },
 			},
 		},
 	},
 	settings = {
 		typescript = {
-			tsserver = { useSyntaxServer = false },
+			tsserver = {
+				useSyntaxServer = false,
+			},
 			inlayHints = {
 				includeInlayParameterNameHints = "all",
+				includeInlayParameterNameHintsWhenArgumentMatchesName = true,
 				includeInlayFunctionParameterTypeHints = true,
 				includeInlayVariableTypeHints = true,
+				includeInlayVariableTypeHintsWhenTypeMatchesName = true,
 				includeInlayPropertyDeclarationTypeHints = true,
 				includeInlayFunctionLikeReturnTypeHints = true,
 				includeInlayEnumMemberValueHints = true,
 			},
 		},
-	},
-	filetypes = {
-		"typescript",
-		"javascript",
-		"vue",
 	},
 }

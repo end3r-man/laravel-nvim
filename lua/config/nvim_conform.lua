@@ -24,6 +24,7 @@ return {
 			formatters_by_ft = {
 				blade = { "blade-formatter", stop_after_first = true },
 				vue = { "prettierd", stop_after_first = true },
+				css = { "prettierd", stop_after_first = true },
 				javascript = { "prettierd", stop_after_first = true },
 				typescript = { "prettierd", stop_after_first = true },
 				json = { "prettierd", "jq", stop_after_first = true },

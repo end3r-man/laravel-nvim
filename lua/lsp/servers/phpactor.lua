@@ -6,6 +6,4 @@ return {
 		["language_server_phpstan.enabled"] = true,
 		["language_server_psalm.enabled"] = false,
 	},
-	filetypes = { "php" },
-	root_pattern = { "composer.json", ".git" },
 }
