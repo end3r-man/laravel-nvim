@@ -30,7 +30,7 @@ return {
 				json = { "prettierd", "jq", stop_after_first = true },
 				markdown = { "prettierd", "markdownlint", stop_after_first = true },
 				lua = { "stylua" },
-				php = { "pretty-php", "phpcbf", "php-cs-fixer", stop_after_first = true },
+				php = { "pint", "pretty-php", "phpcbf", "php-cs-fixer", stop_after_first = true },
 				sql = { "pg_format", "sqlfmt", stop_after_first = true },
 				yaml = { "yamlfmt" },
 				["*"] = { "injected" },
