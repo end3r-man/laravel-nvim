@@ -1,15 +1,24 @@
-local util = require("lspconfig").util
 return {
 	cmd = { "tailwindcss-language-server", "--stdio" },
-	filetypes = { "html", "blade", "css", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue" },
-	root_dir = util.root_pattern(
+	root_markers = {
 		"tailwind.config.js",
 		"tailwind.config.ts",
+		"tailwind.config.cjs",
 		"postcss.config.js",
 		"postcss.config.ts",
 		"package.json",
-		"node_modules"
-	),
+	},
+	filetypes = {
+		"html",
+		"blade",
+		"css",
+		"scss",
+		"javascript",
+		"typescript",
+		"javascriptreact",
+		"typescriptreact",
+		"vue",
+	},
 	settings = {
 		tailwindCSS = {
 			lint = {
@@ -22,7 +31,15 @@ return {
 				recommendedVariantOrder = "warning",
 			},
 			validate = true,
+			experimental = {
+				classRegex = {
+					{ "class:\\s*?[\"'`]([^\"'`]*).*?[\"'`]", "[\"'`]([^\"'`]*).*?[\"'`]" },
+					{ "className:\\s*?[\"'`]([^\"'`]*).*?[\"'`]", "[\"'`]([^\"'`]*).*?[\"'`]" },
+				},
+			},
+			includeLanguages = {
+				blade = "html",
+			},
 		},
 	},
-	flags = { debounce_text_changes = 150 },
 }

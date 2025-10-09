@@ -31,7 +31,7 @@ require("lazy").setup({
 	require("config.nvim_neoscroll"),
 
 	--LSP Config
-	require("lsp.lsp"),
+	require("lsp.init"),
 	--require("lsp.vue"),
 
 	-- UI Config

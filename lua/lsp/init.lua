@@ -6,43 +6,148 @@ return {
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 	},
 	config = function()
+		-- Setup blade filetype detection
+		vim.filetype.add({
+			pattern = {
+				[".*%.blade%.php"] = "blade",
+			},
+		})
+
+		-- Create LSP attach autocommand group
 		local lsp_attach_group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true })
+
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = lsp_attach_group,
 			callback = function(ev)
+				local client = vim.lsp.get_client_by_id(ev.data.client_id)
 				local buf = ev.buf
+
 				local function map(keys, fn, desc)
 					vim.keymap.set("n", keys, fn, { buffer = buf, desc = desc })
 				end
+
+				-- LSP Keymaps
 				map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 				map("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
 				map("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+				map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 				map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 				map("K", vim.lsp.buf.hover, "Show hover")
+				map("<leader>d", vim.diagnostic.open_float, "Show [D]iagnostics")
+				map("[d", vim.diagnostic.goto_prev, "Previous [D]iagnostic")
+				map("]d", vim.diagnostic.goto_next, "Next [D]iagnostic")
+				map("<leader>f", function()
+					vim.lsp.buf.format({ async = false })
+				end, "[F]ormat buffer")
+
+				-- Enable inlay hints if available (Neovim 0.11+)
+				if client and client.supports_method("textDocument/inlayHint") then
+					vim.lsp.inlay_hint.enable(true, { bufnr = buf })
+					map("<leader>th", function()
+						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = buf }), { bufnr = buf })
+					end, "[T]oggle Inlay [H]ints")
+				end
+
+				-- Highlight references on cursor hold
+				if client and client.supports_method("textDocument/documentHighlight") then
+					local highlight_augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+						buffer = buf,
+						group = highlight_augroup,
+						callback = vim.lsp.buf.document_highlight,
+					})
+					vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+						buffer = buf,
+						group = highlight_augroup,
+						callback = vim.lsp.buf.clear_references,
+					})
+					vim.api.nvim_create_autocmd("LspDetach", {
+						group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
+						callback = function(event2)
+							vim.lsp.buf.clear_references()
+							vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
+						end,
+					})
+				end
 			end,
 		})
 
+		-- Setup diagnostic signs
+		local signs = {
+			{ name = "DiagnosticSignError", text = "" },
+			{ name = "DiagnosticSignWarn", text = "" },
+			{ name = "DiagnosticSignHint", text = "󰌵" },
+			{ name = "DiagnosticSignInfo", text = "" },
+		}
+
+		for _, sign in ipairs(signs) do
+			vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+		end
+
+		-- Configure diagnostics
+		vim.diagnostic.config({
+			virtual_text = {
+				prefix = "●",
+				spacing = 4,
+			},
+			signs = true,
+			update_in_insert = false,
+			underline = true,
+			severity_sort = true,
+			float = {
+				focusable = false,
+				style = "minimal",
+				border = "rounded",
+				source = true,
+				header = "",
+				prefix = "",
+			},
+		})
+
+		-- Setup LSP handlers with borders
+		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+			border = "rounded",
+		})
+
+		vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+			border = "rounded",
+		})
+
+		-- Get capabilities from nvim-cmp
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-		local servers = require("lsp.servers") -- points at lua/config/server/init.lua
-		local ensure = vim.tbl_keys(servers)
+		-- Load server configurations
+		local servers = require("lsp.servers")
 
-		require("mason-lspconfig").setup({
-			ensure_installed = ensure,
-			handlers = {
-				function(name)
-					local cfg = {
-						capabilities = capabilities,
-					}
-					local ok, server_mod = pcall(require, "config.lsp.servers." .. name)
-					if ok and type(server_mod) == "table" then
-						vim.tbl_deep_extend("force", cfg, server_mod)
-					end
-					require("lspconfig")[name].setup(cfg)
-				end,
-			},
+		-- Configure each LSP server using the new vim.lsp.config() API
+		for server_name, server_config in pairs(servers) do
+			local config = vim.tbl_deep_extend("force", {
+				capabilities = capabilities,
+			}, server_config)
+
+			vim.lsp.config(server_name, config)
+		end
+
+		-- Enable all configured LSP servers
+		local server_names = vim.tbl_keys(servers)
+		vim.lsp.enable(server_names)
+
+		-- Setup Mason for installing LSP servers and tools
+		local ensure_installed = vim.list_extend(vim.deepcopy(server_names), {
+			-- Formatters
+			"stylua", -- Lua
+			"prettierd", -- JS/TS/Vue/JSON
+			"blade-formatter", -- Blade
+			"php-cs-fixer", -- PHP
+			"pint", -- Laravel PHP
+		})
+
+		require("mason-tool-installer").setup({
+			ensure_installed = ensure_installed,
+			auto_update = false,
+			run_on_start = true,
 		})
 	end,
 }
