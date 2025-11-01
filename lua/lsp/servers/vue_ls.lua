@@ -9,7 +9,7 @@ return {
 	init_options = {
 		vue = {
 			-- disable hybrid mode
-			hybridMode = false,
+			hybridMode = true,
 		},
 		vetur = {
 			completion = {
