@@ -33,6 +33,7 @@ return {
 				php = { "pint", "pretty-php", "phpcbf", "php-cs-fixer", stop_after_first = true },
 				sql = { "pg_format", "sqlfmt", stop_after_first = true },
 				yaml = { "yamlfmt" },
+				svelte = { "prettierd", stop_after_first = true },
 				["*"] = { "injected" },
 			},
 			format_on_save = {

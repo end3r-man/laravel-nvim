@@ -14,6 +14,7 @@ return {
 		"vue",
 		"javascriptreact",
 		"typescriptreact",
+		"svelte",
 	},
 	init_options = {
 		includeLanguages = {
