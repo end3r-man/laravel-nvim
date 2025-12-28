@@ -29,6 +29,7 @@ require("lazy").setup({
 	require("config.nvim_laravel"),
 	require("config.nvim_precognition"),
 	require("config.nvim_neoscroll"),
+	require("config.nvim_comment"),
 
 	--LSP Config
 	require("lsp.init"),
